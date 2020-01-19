@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
     char* IRfilename = argv[1];
     char* outfilename = argv[2];
 
-     infile = SndfileHandle(IRfilename);
+    infile = SndfileHandle(IRfilename);
 
     if (infile.error() != SF_ERR_NO_ERROR) {
         cout << "Error while opening IR file " << IRfilename << endl;
@@ -40,18 +40,19 @@ int main(int argc, char* argv[])
     cout << "    Sample rate : " << infile.samplerate() << endl;
     cout << "    Channels    : " << infile.channels() << endl;
     cout << "    Frames      : " << infile.frames() << endl;
-    cout << endl << "Writing to: " << outfilename << endl;
+    cout << "Writing to: " << outfilename << endl;
 
     int frames = infile.frames();
     int channels = infile.channels();
     int totalFrames = frames * channels;
      
-    float* inbuffer = new float[frames*channels];
-    sf_count_t readcount =  infile.read(inbuffer, frames*channels);
+    float* inbuffer = new float[totalFrames];
+    int readcount =  infile.read(inbuffer, totalFrames);
  
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < totalFrames; i++) {
         //printf("%.8ef,\n", (float) inbuffer[i]);
         fprintf(outfile, " %.8ef,\n", inbuffer[i]);
-     }
-   
+    }
+    
+    cout << readcount << " frames read and written." << endl;
 }
