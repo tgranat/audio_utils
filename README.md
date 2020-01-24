@@ -1,11 +1,11 @@
 # audio_utils
 Audio utility programs.
 
-So far:
 
 ### convert_ir
 
-Made this program to read an impulse response file and write the data as text to another file. Result looks like (example):
+Made this program to read an audio file and write the data as text to another file. Using libsndfile to read the audio file, File formats supported by libsndfile should work, but is only tested with Wav.
+Example to show format of output file:
 
 ```
 1.34298682e-01f,
@@ -16,10 +16,6 @@ Made this program to read an impulse response file and write the data as text to
 4.50268507e-01f,
 ```
 etc.
-
-Using libsndfile to read the audio file.
-
-Can of course be used to read any audio file supported by libsndfile. Tested with wav files.
 
 ### resample
 
