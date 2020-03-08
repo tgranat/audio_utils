@@ -5,6 +5,44 @@
 #include <vector>
 using namespace std;
 
+void printFileInfo(SndfileHandle sf) {
+    cout << "    Sample rate : " << sf.samplerate() << endl;
+    cout << "    Channels    : " << sf.channels() << endl;
+    cout << "    Frames      : " << sf.frames() << endl;
+    cout << "    Format      : ";
+
+    switch (sf.format() & SF_FORMAT_TYPEMASK) {
+    case SF_FORMAT_CAF:
+        cout << "CAF" << endl;
+        break;
+    case SF_FORMAT_WAV:
+        cout << "WAV" << endl;
+        break;
+    case SF_FORMAT_AIFF:
+        cout << "AIFF" << endl;
+        break;
+    default:
+        cout << "other: " << (sf.format() & SF_FORMAT_TYPEMASK) << endl;
+    }
+    cout << "    PCM         : ";
+    switch (sf.format() & SF_FORMAT_SUBMASK) {
+    case SF_FORMAT_PCM_16:
+        cout << "16 bit" << endl;
+        break;
+    case SF_FORMAT_PCM_24:
+        cout << "24 bit" << endl;
+        break;
+    case SF_FORMAT_PCM_32:
+        cout << "32 bit" << endl;;
+        break;
+    case SF_FORMAT_FLOAT:
+        cout << "32 bit float" << endl;
+        break;
+    default:
+        cout << "other: " << (sf.format() & SF_FORMAT_SUBMASK) << endl;
+    }
+}
+
 int main(int argc, char* argv[])
 {
     if (argc < 3) {
@@ -37,10 +75,8 @@ int main(int argc, char* argv[])
     };
 
     cout << "Reading from: " << IRfilename << endl;
-    cout << "    Sample rate : " << infile.samplerate() << endl;
-    cout << "    Channels    : " << infile.channels() << endl;
-    cout << "    Frames      : " << infile.frames() << endl;
     cout << "Writing to: " << outfilename << endl;
+    printFileInfo(IRfilename);
 
     int frames = infile.frames();
     int channels = infile.channels();
