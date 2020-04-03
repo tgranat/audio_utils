@@ -50,9 +50,10 @@ int main(int argc, char* argv[])
         cout << "This program read an impulse response file <IR filename> and" << endl;
         cout << "writes the data as text to <output filename>.data" << endl;
         cout << "and writes the data as a float vector to <output filename>.h" << endl;
-        cout << "<output filename> will also be the vector name so it has to conform cith C++ naming rules." << endl;
+        cout << "<vector name> can be given as third argument. If not given, <output filename>"  << endl;
+        cout << "will be used as the vector name so it has to conform cith C++ naming rules." << endl;
         cout << "Syntax:" << endl;
-        cout << argv[0] << " <IR filename> <output filename>" << endl;
+        cout << argv[0] << " <IR filename> <output filename> [<vector name>]" << endl;
         return 1;
     }
 
@@ -64,8 +65,14 @@ int main(int argc, char* argv[])
     outfilename.append(".data");
     string headerfilename(argv[2]);
     headerfilename.append(".h");
-    string vectorname(argv[2]);
-    
+    string vectorname("");
+    if (argc == 4) {
+        vectorname.append(argv[3]);
+    }
+    else {
+        vectorname.append(argv[2]);
+    }
+   
     infile = SndfileHandle(IRfilename.c_str());
 
     if (infile.error() != SF_ERR_NO_ERROR) {
@@ -91,6 +98,7 @@ int main(int argc, char* argv[])
 
 
     cout << "Reading from: " << IRfilename << endl;
+    cout << "Vector is named: " << vectorname << endl;
     cout << "Writing to: " << outfilename << " and " << headerfilename << endl;
     printFileInfo(IRfilename);
 
@@ -119,6 +127,8 @@ int main(int argc, char* argv[])
 
     fprintf(headerfile, "}; \n}\n");
 
-    
+    fprintf(headerfile, "}; \n}\n");
+
+
     cout << readcount << " frames read and written." << endl;
 }
