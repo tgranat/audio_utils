@@ -3,6 +3,7 @@
 #include <sndfile.hh>
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
 void printFileInfo(SndfileHandle sf) {
@@ -47,7 +48,9 @@ int main(int argc, char* argv[])
 {
     if (argc < 3) {
         cout << "This program read an impulse response file <IR filename> and" << endl;
-        cout << "writes the data as text to <output filename>." << endl;
+        cout << "writes the data as text to <output filename>.data" << endl;
+        cout << "and writes the data as a float vector to <output filename>.h" << endl;
+        cout << "<output filename> will also be the vector name so it has to conform cith C++ naming rules." << endl;
         cout << "Syntax:" << endl;
         cout << argv[0] << " <IR filename> <output filename>" << endl;
         return 1;
@@ -55,10 +58,15 @@ int main(int argc, char* argv[])
 
     SndfileHandle infile;
     FILE *outfile = NULL;
-    char* IRfilename = argv[1];
-    char* outfilename = argv[2];
-
-    infile = SndfileHandle(IRfilename);
+    FILE *headerfile = NULL;
+    string IRfilename(argv[1]);
+    string outfilename(argv[2]);
+    outfilename.append(".data");
+    string headerfilename(argv[2]);
+    headerfilename.append(".h");
+    string vectorname(argv[2]);
+    
+    infile = SndfileHandle(IRfilename.c_str());
 
     if (infile.error() != SF_ERR_NO_ERROR) {
         cout << "Error while opening IR file " << IRfilename << endl;
@@ -67,15 +75,23 @@ int main(int argc, char* argv[])
     }
     
     errno_t err;
-    err = fopen_s(&outfile, outfilename, "w");
+    err = fopen_s(&outfile, outfilename.c_str(), "w");
     if (err != 0) {
         cout << "Not able to open output file " << outfilename << endl; 
         cout << "err=" << err << endl;
         return 1;
     };
 
+    err = fopen_s(&headerfile, headerfilename.c_str(), "w");
+    if (err != 0) {
+        cout << "Not able to open header file " << headerfilename << endl;
+        cout << "err=" << err << endl;
+        return 1;
+    };
+
+
     cout << "Reading from: " << IRfilename << endl;
-    cout << "Writing to: " << outfilename << endl;
+    cout << "Writing to: " << outfilename << " and " << headerfilename << endl;
     printFileInfo(IRfilename);
 
     int frames = infile.frames();
@@ -85,10 +101,24 @@ int main(int argc, char* argv[])
     float* inbuffer = new float[totalFrames];
     int readcount =  infile.read(inbuffer, totalFrames);
  
+    fprintf(headerfile, "#pragma once\n");
+    fprintf(headerfile, "// Generated from %s\n", IRfilename.c_str());
+    fprintf(headerfile, "namespace BinaryData {\n");
+    fprintf(headerfile, "static const std::vector<float> %s {\n", vectorname.c_str());
+
     for (int i = 0; i < totalFrames; i++) {
         //printf("%.8ef,\n", (float) inbuffer[i]);
-        fprintf(outfile, " %.8ef,\n", inbuffer[i]);
+        if (i < totalFrames - 1) {
+            fprintf(outfile, " %.8ef,\n", inbuffer[i]);
+            fprintf(headerfile, " %.8ef,\n", inbuffer[i]);
+        } else {
+            fprintf(outfile, " %.8ef", inbuffer[i]);
+            fprintf(headerfile, " %.8ef,\n", inbuffer[i]);
+        }
     }
+
+    fprintf(headerfile, "}; \n}\n");
+
     
     cout << readcount << " frames read and written." << endl;
 }
