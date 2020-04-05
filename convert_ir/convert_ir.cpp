@@ -127,8 +127,5 @@ int main(int argc, char* argv[])
 
     fprintf(headerfile, "}; \n}\n");
 
-    fprintf(headerfile, "}; \n}\n");
-
-
     cout << readcount << " frames read and written." << endl;
 }
