@@ -1,6 +1,10 @@
 # audio_utils
 Audio utility programs I've made when working with audio plugins.
 
+### audioinfo
+
+Prints out info from a sampled audio file, such as format, samplerate, number of frames
+and channels etc. Uses libsndfile.
 
 ### convert_ir
 
