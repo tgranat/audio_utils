@@ -77,7 +77,7 @@ void printFileInfo(SndfileHandle sf) {
 int main(int argc, char* argv[])
 {
     if (argc < 2) {
-        cout << "Display some basic information about an audio file." << endl;
+        cout << "Display some basic information about a sampled audio file." << endl;
         cout << "Using the 'libsndfile' library (http://www.mega-nerd.com/libsndfile)" << endl;
         cout << "Not all formats and encodings supported by libsndfile are displayed." << endl;
         cout << "Syntax:" << endl;
@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
     infile = SndfileHandle(IRfilename.c_str());
 
     if (infile.error() != SF_ERR_NO_ERROR) {
-        cout << "Error while opening IR file " << IRfilename << endl;
+        cout << "Error while opening audio file " << IRfilename << endl;
         cout << infile.strError() << endl;
         return 1;
     }
