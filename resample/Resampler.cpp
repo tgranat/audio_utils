@@ -3,6 +3,8 @@
 #include <vector>
 #include <iostream>
 
+// Resamples an audio buffer 
+
 template <class I, class O> 
 void Resampler::resample(const I* source, int sourceLength, double sourceSampleRate, O* target, double targetSampleRate)
 {
@@ -55,6 +57,7 @@ int main(int argc, char* argv[])
 	std::vector<float> resampledData(targetLength);
 
 	Resampler::resample(ir_testdata_44100Hz.data(), sourceLen, sourceSampleRate, resampledData.data(), resampledSampleRate);
+	std::cout << "Test implementation." << std::endl;
 	std::cout << "Source size:" << ir_testdata_44100Hz.size() << std::endl;
 	std::cout << "Resampled size: " << resampledData.size() << std::endl;
 }
