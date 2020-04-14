@@ -16,6 +16,12 @@ void printFileInfo(SndfileHandle sf) {
     case SF_FORMAT_AIFF:
         cout << "AIFF" << endl;
         break;
+    case SF_FORMAT_FLAC:
+        cout << "FLAC" << endl;
+        break;
+    case SF_FORMAT_OGG:
+        cout << "OGG" << endl;
+        break;
     case SF_FORMAT_CAF:
         cout << "CAF" << endl;
         break;
@@ -73,7 +79,7 @@ int main(int argc, char* argv[])
     if (argc < 2) {
         cout << "Display some basic information about an audio file." << endl;
         cout << "Using the 'libsndfile' library (http://www.mega-nerd.com/libsndfile)" << endl;
-        cout << "Not all formats and encodings are displayed." << endl;
+        cout << "Not all formats and encodings supported by libsndfile are displayed." << endl;
         cout << "Syntax:" << endl;
         cout << argv[0] << " <audio filename>" << endl;
         return 1;
